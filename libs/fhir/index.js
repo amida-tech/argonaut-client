@@ -18,33 +18,21 @@ var requestPromise = function(client_id, accessToken, path) {
                 break;
             }
 
-        //var oauth2 = require('simple-oauth2')(temp); // Override default since we have 2 server setup here - one for oauth and another for data
-        /*api("GET", path, {
-            access_token: accessToken,
+        var url = (path.indexOf(credentials.api_url) === 0) ? path : (credentials.api_url + path);
+        request.get({
+            url: url,
+            auth: {
+                bearer: accessToken
+            },
             headers: {
                 Accept: 'application/json'
-            },
-            qs: {
-                format: 'json'
             }
-        }, function(err, body) {
-            //console.log(err, body);
-            if (err) reject(err);
-            else resolve(body);
-        });*/
-        request.get({url:(credentials.api_url + path), 
-        auth:{
-          bearer: accessToken
-        },
-        headers: {
-          Accept: 'application/json'
-        }
         }, function(err, res, body) {
             console.log("request --------------------", err);
             if (err) reject(err);
             else resolve(body);
         });
-        
+
     });
 };
 
@@ -58,16 +46,16 @@ var accessTokenPromise = function(cid, authCode, redirectURI) {
                 break;
             }
 
-        //credentials.clientID = credentials.client_id;
-        //credentials.clientSecret = credentials.client_secret;
-        //credentials.authorizationPath = credentials.authorization_path;
-        //credentials.tokenPath = credentials.token_path;
+            //credentials.clientID = credentials.client_id;
+            //credentials.clientSecret = credentials.client_secret;
+            //credentials.authorizationPath = credentials.authorization_path;
+            //credentials.tokenPath = credentials.token_path;
 
-        //var oauth2 = require('simple-oauth2')(credentials);
+            //var oauth2 = require('simple-oauth2')(credentials);
 
-        //oauth2.authCode.getToken({code:authCode, redirect_uri: redirectURI}, function(err, body) { 
-        //console.log(err, body);
-        //	if(err) reject(err); else resolve(body);} );
+            //oauth2.authCode.getToken({code:authCode, redirect_uri: redirectURI}, function(err, body) { 
+            //console.log(err, body);
+            //	if(err) reject(err); else resolve(body);} );
         var path = credentials.site + credentials.token_path;
 
         request.post({
@@ -89,31 +77,32 @@ var accessTokenPromise = function(cid, authCode, redirectURI) {
             }
         }, function(err, res, body) {
             data(err, res, body, function(err, body) {
-                if(err || (body && body.error)) reject(err || body.error_description); else resolve(body);
+                if (err || (body && body.error)) reject(err || body.error_description);
+                else resolve(body);
             });
         });
 
     });
 };
 
-  // Extract the data from the request response
-  function data(error, response, body, callback) {
+// Extract the data from the request response
+function data(error, response, body, callback) {
 
     if (error) {
-      return callback(error);
+        return callback(error);
     }
 
     if (process.env.DEBUG) console.log('fhir client: checking response body', body);
 
-    try      { body = JSON.parse(body); }
-    catch(e) { /* The OAuth2 server does not return a valid JSON'); */ }
+    try {
+        body = JSON.parse(body);
+    } catch (e) { /* The OAuth2 server does not return a valid JSON'); */ }
 
     if (response.statusCode >= 400) return callback(body || new errors.HTTPError(response.statusCode), null)
     callback(error, body);
-  }
+}
 
 module.exports = {
     request: requestPromise,
     accessToken: accessTokenPromise
 };
-

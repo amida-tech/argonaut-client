@@ -1,11 +1,8 @@
 /**
  * Provides pre-configured list of servers and applications registered on them.
  */
-module.exports = {
-    //fhir_server_uri: 'https://fhir-dev.healthintersections.com.au/closed'
-    fhir_server_uri: 'https://fhir-api.smarthealthit.org',
-
-    clients: [{
+ 
+var clients = [{
         name: 'SMART on FHIR',
         url: 'https://fhir-api.smarthealthit.org',
         auth_url: 'https://authorize.smarthealthit.org',
@@ -35,5 +32,17 @@ module.exports = {
             revocation_path: '/revoke',
             scope: ''
         }
-    }]
+    }];
+    
+module.exports = {
+    //fhir_server_uri: 'https://fhir-dev.healthintersections.com.au/closed'
+    fhir_server_uri: 'https://fhir-api.smarthealthit.org',
+    
+    findClient: function(client_id) {
+            var i, len = clients.length;
+    var credentials; 
+    for(i=0; i<len;i++) if(client_id === clients[i].credentials.client_id) { credentials =  clients[i].credentials; break;}
+        return credentials;
+    },
+    clients: clients
 };

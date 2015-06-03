@@ -3,16 +3,14 @@ body {
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
-* {
-    outline: red dashed thin
-}
-
 a {
   color: #00B7FF;
 }
 
 .client {
   display:table-cell;
+  border: 1px solid blue;
+  padding: 1em;
 }
 
 .inline {
@@ -26,7 +24,7 @@ a {
 }
 
 .client div {
-  display:inline;
+  display:inline-block;
 }
 
 .client form {
@@ -41,4 +39,14 @@ a {
 
 .limm {
   width:300px;
+}
+
+#json {
+  border: 1px solid blue;
+}
+
+.button {
+  display: block;
+  padding-bottom: 20px;
+  padding-top: 20px;
 }
