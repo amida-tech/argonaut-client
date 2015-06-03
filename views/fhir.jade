@@ -13,12 +13,15 @@ block content
       ul
         p Get medication prescriptions for:
         each patient in patients
-          li #[a(href=('/fhir?query=' + encodeURIComponent( '/MedicationPrescription?subject:Patient=' + patient.id) + '&token_id=' + patient.token_id)) #{patient.name}]
+          li #[a(href=('/fhir?query=/MedicationPrescription?patient=' + patient.id + '&token_id=' + patient.token_id)) #{patient.name}]
     if medications && medications.length > 0
       h1 Medication Prescription record(s)
       ul
         each medication in medications
-          li #{medication.name} #{medication.status}
+          if medication.status == 'completed'
+            li(class='completed') #{medication.name} #{medication.status}
+          else
+            li #{medication.name} #{medication.status}
   h1 Raw response on request : #{id}
   pre(id='json') #{data}
   p
