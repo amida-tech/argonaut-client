@@ -4,9 +4,15 @@ block content
   h1= title
   p Welcome to #{title}
   div
-    ul
-      each user in users
-        li #{user.username} #[a(href=('/fhir?username=' + user.username)) ??? ] : #{user.externalId} : #{user.accessToken} : #{user.refreshToken} : #{user.expirationDate}
-    form(name="get", action="/", method="post")
-      input(type="text", name="username")
-      input(type='submit',value='authorize')
+    ul(class='clients')
+      each client in clients
+        li(class='client') 
+          div #[a(href=(client.url), target='_blank') #{client.name} ]
+            ul(class='inline')
+              each user in users
+                if user.clientId = client.credentials.client_id
+                  li(class='truncate limm') #{user.expirationDate.toISOString()} #[a(href=('/fhir?token_id=' + user._id)) #{user.accessToken} ] 
+
+            form(name='get', action='/', method='post')
+              input(type='hidden', name='client_id' value='#{client.credentials.client_id}')
+              input(type='submit',value='Get a new token')

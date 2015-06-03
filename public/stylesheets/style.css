@@ -3,6 +3,42 @@ body {
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
+* {
+    outline: red dashed thin
+}
+
 a {
   color: #00B7FF;
+}
+
+.client {
+  display:table-cell;
+}
+
+.inline {
+  display:inline;
+}
+
+.clients {
+  display: table;
+  list-style-type: none;
+  padding-right: 20px;
+}
+
+.client div {
+  display:inline;
+}
+
+.client form {
+  display:inline;
+}
+
+.truncate {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.limm {
+  width:300px;
 }

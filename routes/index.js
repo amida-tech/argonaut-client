@@ -3,7 +3,7 @@ var router = express.Router();
 
 var dal = require('../libs/dal');
 var fhir = require('../libs/fhir');
-var credentials = require('../libs/credentials');
+var config = require('../libs/config');
 var Promise = require('promise');
 
 /* GET home page. */
@@ -21,9 +21,11 @@ router.get('/', function(req, res) {
 
     readUsers.then(function(users) {
         //console.log("Read users success", users);
+        //console.log(config.clients);
         res.render('index', {
             title: 'Express',
-            users: users
+            users: users,
+            clients: config.clients
         });
     }).catch(function(err) {
         //console.log("Read users fails", err);
@@ -38,9 +40,13 @@ router.get('/', function(req, res) {
  * Access username and trying to authorize with DRE
  */
 router.post('/', function(req, res) {
-    req.session.username = req.body.username;
+    var client_id = req.body.client_id;
     res.clearCookie('login_token');
-    res.redirect(credentials.site + credentials.authorizationPath + '?redirect_uri=http%3A%2F%2Flocalhost%3A3001%2Ffhir%2Fcallback&response_type=code&client_id=argonaut_demo_client');
+    var i, len = config.clients.length;
+    var credentials; 
+    for(i=0; i<len;i++) if(client_id === config.clients[i].credentials.client_id) { credentials =  config.clients[i].credentials; break;}
+    //console.log(credentials);
+    res.redirect(credentials.site + credentials.authorization_path + '?redirect_uri=http%3A%2F%2Ftoolbox.amida-demo.com%3A3001%2Ffhir%2Fcallback' + encodeURIComponent('?client_id='+client_id) + '&response_type=code&client_id='+client_id);
 });
 
 module.exports = router;

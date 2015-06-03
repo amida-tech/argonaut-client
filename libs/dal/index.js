@@ -6,14 +6,12 @@ var connection = mongoose.createConnection('mongodb://' + databaseServer + '/' +
 var Schema = mongoose.Schema;  
 
 var userSchema = new Schema({
-    username: {
-        type: String,
-        required: true
-    },
+    clientId: String,
     externalId: String,
 	accessToken: String,
 	refreshToken: String,
-	expirationDate: Date
+	expirationDate: Date,
+    scope: String
 });
 
 var UserModel = connection.model('User', userSchema);
@@ -24,20 +22,22 @@ var UserModel = connection.model('User', userSchema);
 var users = (function () {
     return {
         readAll: function( done) {
+            UserModel.remove({'expirationDate':{'$lt': new Date()} }).exec();
             UserModel.find(function(err, users) {
                 if (err) {
                     return done(err);
                 }
                 if (users) {
+                    //console.log(users);
                     return done(null, users);
                 }
                 done(null, null);
             });
         },
         
-        find: function (username, done) {
+        find: function (token_id, done) {
             UserModel.where({
-                username: username
+                _id: token_id
             }).findOne(function (err, user) {
                 if (err) {
                     return done(err);
@@ -49,27 +49,30 @@ var users = (function () {
             });
         },
 
-        save: function (username, externalId, accessToken, refreshToken, expirationDate, done) {
+        save: function (clientId, externalId, accessToken, refreshToken, expire_in, scope, done) {
+            var expire = new Date();
+            expire.setSeconds( expire.getSeconds()  + parseInt(expire_in));
             var db = new UserModel({
-                username: username,
+                clientId:clientId,
                 externalId: externalId,
                 accessToken: accessToken,
                 refreshToken: refreshToken,
-				expirationDate: expirationDate
+				expirationDate: expire,
+                scope: scope
             });
             console.log("Saving ", db);
             db.save(done);
         },
 
-        delete: function (username, done) {
+        delete: function (externalId, done) {
             UserModel.where({
-                username: username
+                externalId: externalId
             }).findOneAndRemove(done);
         },
 		
-		updateToken: function (username, accessToken, expirationDate, done) {
+		updateToken: function (externalId, accessToken, expirationDate, done) {
             UserModel.update({
-                username: username
+                externalId: externalId
             }, {
                 $set: {
                     accessToken: accessToken,

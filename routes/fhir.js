@@ -12,12 +12,13 @@ var credentials = require('../libs/credentials');
  * User record should exists in a database and contains valid access token.
  */      
 router.get('/', function(req, res) {
-    if(req.query.username) {
-        dal.users.find( req.query.username, function(err, user) {
+    console.log(req.query);
+    if(req.query.token_id) {
+        dal.users.find( req.query.token_id, function(err, user) {
             if(err) {
                 req.redirect('/');
             } else {
-                fhir.request(user.accessToken, "/fhir/Patient/"+user.username).then(function(val) {
+                fhir.request(user.clientId, user.accessToken, "/Patient/1272431").then(function(val) {
                     res.render('fhir', {
                         data: JSON.stringify(val)
                     });
@@ -35,12 +36,20 @@ router.get('/', function(req, res) {
  * Callback used for exchange of access code to access token 
  */
 router.get('/callback', function(req, res) {
-    if( req.session.username) {
-        fhir.accessToken(req.query.code).then(function(body) {
-            console.log( body);
-            dal.users.save(req.session.username, body.patient, body.access_token, body.refresh_token, body.expires_in, function(err, user) {
-                res.redirect("/");    
-            });  
+    if( req.query.client_id) {
+        var client_id = req.query.client_id;
+        var code =  req.query.code;
+        fhir.accessToken( client_id, code, 'http://toolbox.amida-demo.com:3001/fhir/callback?client_id='+client_id).then(function(body) {
+            console.log('body----------------------------------------', body);
+            if(body) {
+                dal.users.save( body.client_id || client_id, body.patient, body.access_token, body.refresh_token, body.expires_in, body.scope, function(err, user) {
+                    res.redirect("/");    
+                });
+            } else {
+                res.redirect("/");  
+            } 
+        }).catch(function(error){
+            console.log(error);
         });
     } else {
         res.redirect("/");
