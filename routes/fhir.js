@@ -74,7 +74,7 @@ router.get('/', function(req, res) {
         var query = req.query.query;
         dal.users.find(token_id, function(err, user) {
             if (err || !(user)) {
-                req.redirect('/');
+                res.redirect('/');
             } else {
                 fhir.request(user.clientId, user.accessToken, query).then(function(val) {
                     var prev, next;
@@ -87,12 +87,12 @@ router.get('/', function(req, res) {
                     renderPatients(res, token_id, val, prev, next, json);
 
                 }).catch(function(err) {
-                    req.redirect('/');
+                    res.redirect('/');
                 });
             }
         });
     } else {
-        req.redirect('/');
+        res.redirect('/');
     }
 });
 
