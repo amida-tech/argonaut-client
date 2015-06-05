@@ -15,7 +15,7 @@ block content
             ul(class='inline')
               li(class='truncate limm') Expiration: Token
               each user in users
-                if user.clientId = client.credentials.client_id
+                if user.clientId == client.credentials.client_id
                   li(class='truncate limm') #{user.expirationDate.toISOString()} : #[a(href=('/fhir?query=/Patient&token_id=' + user._id)) #{user.accessToken} ] 
 
             form(name='get', action='/', method='post')

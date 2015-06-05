@@ -149,7 +149,7 @@ var getPatients = function(val, token_id) {
             var fullName = name.join(" ");
             result.push({
                 name: fullName,
-                id: content.identifier[0].value,
+                id: (content.identifier && content.identifier.length>0)?content.identifier[0].value:val.entry[i].id,
                 token_id: token_id
             });
             }

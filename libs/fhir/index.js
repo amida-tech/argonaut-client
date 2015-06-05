@@ -5,6 +5,7 @@ var config = require('../config');
 var Promise = require('promise');
 var extend = require('util')._extend;
 var request = require('request');
+var debug = require('debug')('fhir');
 
 /**
  * Execute request to a FHIR enabled server
@@ -19,6 +20,8 @@ var requestPromise = function(client_id, accessToken, path) {
             }
 
         var url = (path.indexOf(credentials.api_url) === 0) ? path : (credentials.api_url + path);
+
+        debug("GET " + url + " /Bearer : " + accessToken);
         request.get({
             url: url,
             auth: {
@@ -28,7 +31,8 @@ var requestPromise = function(client_id, accessToken, path) {
                 Accept: 'application/json'
             }
         }, function(err, res, body) {
-            console.log("request --------------------", err);
+            if(err) debug("GET " + url + " Error: " + err);
+            if(body) debug("GET " + url + " Body: " + body);
             if (err) reject(err);
             else resolve(body);
         });
@@ -46,23 +50,11 @@ var accessTokenPromise = function(cid, authCode, redirectURI) {
                 break;
             }
 
-            //credentials.clientID = credentials.client_id;
-            //credentials.clientSecret = credentials.client_secret;
-            //credentials.authorizationPath = credentials.authorization_path;
-            //credentials.tokenPath = credentials.token_path;
-
-            //var oauth2 = require('simple-oauth2')(credentials);
-
-            //oauth2.authCode.getToken({code:authCode, redirect_uri: redirectURI}, function(err, body) { 
-            //console.log(err, body);
-            //	if(err) reject(err); else resolve(body);} );
         var path = credentials.site + credentials.token_path;
 
+        debug("POST " + path + " Code: " + authCode + " redirect_uri: " + redirectURI + " client_id: " + credentials.client_id + " client_secret: " + credentials.client_secret + " grant_type: authorization_code");
         request.post({
             url: path,
-            //headers: {
-            //    Accept: 'application/json'
-            //},
             auth: {
                 user: credentials.client_id,
                 pass: credentials.client_secret,
@@ -77,6 +69,9 @@ var accessTokenPromise = function(cid, authCode, redirectURI) {
             }
         }, function(err, res, body) {
             data(err, res, body, function(err, body) {
+                if(err) debug("POST " + path + " Error: " + err);
+                if(body) debug("POST " + path + " Body: " + body);
+
                 if (err || (body && body.error)) reject(err || body.error_description);
                 else resolve(body);
             });
