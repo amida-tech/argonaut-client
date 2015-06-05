@@ -8,43 +8,6 @@ var fhir = require('../libs/fhir');
 var credentials = require('../libs/credentials');
 
 /**
- * Read patient's data, expect username in query parameters.
- * User record should exists in a database and contains valid access token.
- */
-/*router.get('/', function(req, res) {
-    //console.log(req.query);
-    if(req.query.token_id) {
-        var token_id = req.query.token_id;
-        dal.users.find( token_id, function(err, user) {
-            if(err) {
-                req.redirect('/');
-            } else {
-                fhir.request(user.clientId, user.accessToken, "/Patient").then(function(val) {
-                    var prev, next, patients;                  
-                    var json = JSON.parse(val);
-                    //Move some searhh logic here to simplify template logic
-                    prev = findLink(json, 'prev', token_id);
-                    next = findLink(json, 'next', token_id);
-                    patients = getPatients(json, token_id);
-                    
-                    res.render('fhir', {
-                        data: val,
-                        prev: prev,
-                        next: next,
-                        patients: patients
-                    });
-                    
-                }).catch(function(err){
-                    req.redirect('/');
-                });
-            }
-        });
-    } else {
-        req.redirect('/');
-    }
-});*/
-
-/**
  * Callback used for exchange of access code to access token 
  */
 router.get('/callback', function(req, res) {
@@ -68,6 +31,10 @@ router.get('/callback', function(req, res) {
     }
 });
 
+/**
+ * Read patient's data, expect username in query parameters.
+ * User record should exists in a database and contains valid access token.
+ */
 router.get('/', function(req, res) {
     if (req.query.token_id && req.query.query) {
         var token_id = req.query.token_id;
@@ -83,8 +50,7 @@ router.get('/', function(req, res) {
                     prev = findLink(json, 'prev', token_id);
                     next = findLink(json, 'next', token_id);
 
-
-                    renderPatients(res, token_id, val, prev, next, json);
+                    render(res, token_id, val, prev, next, json);
 
                 }).catch(function(err) {
                     res.redirect('/');
@@ -98,7 +64,16 @@ router.get('/', function(req, res) {
 
 module.exports = router;
 
-var renderPatients = function(res, token_id, val, prev, next, json) {
+/**
+ * Render Patients or Medical Prescriptions
+ * @param {response} res - Express response
+ * @param {string} token_id - Token id
+ * @param {string} val - Server response (unparsed)
+ * @param {string|undefined} prev - link to a previous set of resources
+ * @param {string|undefined} next - link to a next set of resources
+ * @param {object} jason - Server response (parsed)
+ */
+var render = function(res, token_id, val, prev, next, json) {
     var patients = getPatients(json, token_id);
     var medications = getMedications(json, token_id);
 
@@ -116,6 +91,13 @@ var renderPatients = function(res, token_id, val, prev, next, json) {
 
 };
 
+/**
+ * Find a link (if any) with given relation ('prev', 'next',...)
+ * @param val - Response of FHIR server (json)
+ * @param {string} rel - Link relation
+ * @param {stirng} token_id - Token id
+ * @returns {string|undefined} - Partial URL 
+ */
 var findLink = function(val, rel, token_id) {
     var result;
     if (val && val.link) {
@@ -130,13 +112,19 @@ var findLink = function(val, rel, token_id) {
     return result;
 };
 
+/**
+ * Returns array of patient records extracted from FHIR resource
+ * @param val - Response of FHIR server (json)
+ * @param {stirng} token_id - Token id
+ * @returns {Array} - Patient records in format { FullName, Id, Token_id }
+ */
 var getPatients = function(val, token_id) {
     var result = [];
     if (val && val.entry) {
         var i, len = val.entry.length;
         for (i = 0; i < len; i++) {
             var name = [];
-            var content = val.entry[i].content;
+            var content = val.entry[i].content || val.entry[i].resource;
             if(content && content.resourceType === 'Patient') {
             if (content.name && content.name.length > 0) {
                 if (content.name[0].family[0]) {
@@ -149,7 +137,7 @@ var getPatients = function(val, token_id) {
             var fullName = name.join(" ");
             result.push({
                 name: fullName,
-                id: (content.identifier && content.identifier.length>0)?content.identifier[0].value:val.entry[i].id,
+                id: (content.identifier && content.identifier.length>0)?content.identifier[0].value:content.id,
                 token_id: token_id
             });
             }
@@ -158,12 +146,18 @@ var getPatients = function(val, token_id) {
     return result;
 };
 
+/**
+ * Returns array of Medication Prescription records extracted from FHIR resource
+ * @param val - Response of FHIR server (json)
+ * @param {stirng} token_id - Token id
+ * @returns {Array} - Medication Prescription records in format { name, status }
+ */
 var getMedications = function(val, token_id) {
     var result = [];
     if (val && val.entry) {
         var i, len = val.entry.length;
         for (i = 0; i < len; i++) {
-            var content = val.entry[i].content;
+            var content = val.entry[i].content || val.entry[i].resource;
             if(content && content.resourceType === 'MedicationPrescription') {
                 var contained = content.contained;
                 if(contained && contained.length >0) {

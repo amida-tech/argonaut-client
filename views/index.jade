@@ -9,7 +9,7 @@ block content
     ul(class='clients')
       each client in clients
         li(class='client') 
-          div
+          .top
             .button Server : #[a(href=(client.url), target='_blank') #{client.name} ]
             
             ul(class='inline')

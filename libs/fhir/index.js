@@ -8,7 +8,12 @@ var request = require('request');
 var debug = require('debug')('fhir');
 
 /**
- * Execute request to a FHIR enabled server
+ * Create promise which resolves to result from FHIR server or fails.
+ * @param {string} client_id - Client id.
+ * @param {string} accessToken - OAuth access token.
+ * @param {string} path - credentials.api_url will be prepended if path is relative.
+ * @returns {Promise}
+ * @function
  */
 var requestPromise = function(client_id, accessToken, path) {
     return new Promise(function(resolve, reject) {
@@ -31,8 +36,8 @@ var requestPromise = function(client_id, accessToken, path) {
                 Accept: 'application/json'
             }
         }, function(err, res, body) {
-            if(err) debug("GET " + url + " Error: " + err);
-            if(body) debug("GET " + url + " Body: " + body);
+            //if(err) debug("GET " + url + " Error: " + err);
+            //if(body) debug("GET " + url + " Body: " + body);
             if (err) reject(err);
             else resolve(body);
         });
@@ -40,8 +45,15 @@ var requestPromise = function(client_id, accessToken, path) {
     });
 };
 
-var accessTokenPromise = function(cid, authCode, redirectURI) {
-    var client_id = cid;
+/**
+ * Create promise which resolves to OAuth2.0 access token or fails.
+ * @param {string} client_id - Client id.
+ * @param {string} authCode - Authorization code.
+ * @param {string} redirectURI - redirect URI after the rocess. 
+ * @returns {Promise}
+ * @function
+ */
+var accessTokenPromise = function(client_id, authCode, redirectURI) {
     return new Promise(function(resolve, reject) {
         var credentials, i, len = config.clients.length;
         for (i = 0; i < len; i++)
@@ -52,7 +64,7 @@ var accessTokenPromise = function(cid, authCode, redirectURI) {
 
         var path = credentials.site + credentials.token_path;
 
-        debug("POST " + path + " Code: " + authCode + " redirect_uri: " + redirectURI + " client_id: " + credentials.client_id + " client_secret: " + credentials.client_secret + " grant_type: authorization_code");
+        //debug("POST " + path + " Code: " + authCode + " redirect_uri: " + redirectURI + " client_id: " + credentials.client_id + " client_secret: " + credentials.client_secret + " grant_type: authorization_code");
         request.post({
             url: path,
             auth: {
@@ -69,8 +81,8 @@ var accessTokenPromise = function(cid, authCode, redirectURI) {
             }
         }, function(err, res, body) {
             data(err, res, body, function(err, body) {
-                if(err) debug("POST " + path + " Error: " + err);
-                if(body) debug("POST " + path + " Body: " + body);
+                //if(err) debug("POST " + path + " Error: " + err);
+                //if(body) debug("POST " + path + " Body: " + body);
 
                 if (err || (body && body.error)) reject(err || body.error_description);
                 else resolve(body);
@@ -80,7 +92,14 @@ var accessTokenPromise = function(cid, authCode, redirectURI) {
     });
 };
 
-// Extract the data from the request response
+
+/**
+ * Extract the data from the request response.
+ * @param {Request} error - error.
+ * @param {Response} response - Express response.
+ * @param {string} body - Express response body.
+ * @param {done} callback - callback.
+ */
 function data(error, response, body, callback) {
 
     if (error) {
@@ -93,11 +112,21 @@ function data(error, response, body, callback) {
         body = JSON.parse(body);
     } catch (e) { /* The OAuth2 server does not return a valid JSON'); */ }
 
-    if (response.statusCode >= 400) return callback(body || new errors.HTTPError(response.statusCode), null)
-    callback(error, body);
+    if (response.statusCode >= 400) { 
+        callback(body || response.statusCode, null);
+    } else {
+        callback(error, body);
+    }
 }
 
 module.exports = {
     request: requestPromise,
     accessToken: accessTokenPromise
 };
+
+/* Global callbacks */
+/**
+ * @callback done.
+ * @param {any} error - any error.
+ * @param {string} body - response body.
+ */
