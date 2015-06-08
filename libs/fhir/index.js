@@ -64,7 +64,7 @@ var accessTokenPromise = function(client_id, authCode, redirectURI) {
 
         var path = credentials.site + credentials.token_path;
 
-        //debug("POST " + path + " Code: " + authCode + " redirect_uri: " + redirectURI + " client_id: " + credentials.client_id + " client_secret: " + credentials.client_secret + " grant_type: authorization_code");
+        debug("POST ", path, " Code: ", authCode, " redirect_uri: ", redirectURI, " client_id: ", credentials.client_id, " client_secret: ", credentials.client_secret, " grant_type: authorization_code");
         request.post({
             url: path,
             auth: {

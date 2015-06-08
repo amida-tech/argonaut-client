@@ -6,6 +6,7 @@ var promise = require('promise');
 var dal = require('../libs/dal');
 var fhir = require('../libs/fhir');
 var credentials = require('../libs/credentials');
+var config = require('../libs/config');
 
 /**
  * Callback used for exchange of access code to access token 
@@ -14,7 +15,9 @@ router.get('/callback', function(req, res) {
     if (req.query.client_id) {
         var client_id = req.query.client_id;
         var code = req.query.code;
-        fhir.accessToken(client_id, code, 'http://toolbox.amida-demo.com:3001/fhir/callback?client_id=' + client_id).then(function(body) {
+	var cred = config.findClient(client_id);
+
+        fhir.accessToken(client_id, code, ((credentials)?cred.redirect_uri:'http://toolbox.amida-demo.com:3001/fhir/callback') + '?client_id=' + client_id).then(function(body) {
             console.log('body----------------------------------------', body);
             if (body) {
                 dal.users.save(body.client_id || client_id, body.patient, body.access_token, body.refresh_token, body.expires_in, body.scope, function(err, user) {
