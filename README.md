@@ -13,6 +13,12 @@ Command to run tunnel:
 
 You will need tools.pem file for this specific server toolbox.amida-demo.com.
 
+##Setting Up
+
+Requires Node/NPM/Bower
+
+Run: `npm install` and `bower install`
+
 ##Starting the client
 Go to directory where clent is located and start it by:
 

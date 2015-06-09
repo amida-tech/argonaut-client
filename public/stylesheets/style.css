@@ -1,56 +1,29 @@
-body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+.table {
+    table-layout: fixed;
 }
 
-a {
-  color: #00B7FF;
+.table td {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-.client {
-  display:table-cell;
-  border: 1px solid blue;
-  padding: 1em;
+.logo {
+    width: 50px;
+    margin-right: 20px;
 }
 
-.inline {
-  display:inline;
+.logo-link {
+    color: #FFFFFF;
+    font-size: 20px;
 }
 
-.clients {
-  display: table;
-  list-style-type: none;
-  padding-right: 20px;
+.panel-default {
+  border-color: #ddd;
 }
-
-.client div {
-  display:inline-block;
-}
-
-.client form {
-  display:inline;
-}
-
-.truncate {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.limm {
-  width:300px;
-}
-
-#json {
-  border: 1px solid blue;
-}
-
-.button {
-  display: block;
-  padding-bottom: 20px;
-  padding-top: 20px;
-}
-
-.completed  {
-  text-decoration: line-through;
+.panel-default > .panel-heading-custom {
+  color: #333;
+  background-color: #3F3F3F;
+  border-color: #ddd;
+  padding: 10px;
 }

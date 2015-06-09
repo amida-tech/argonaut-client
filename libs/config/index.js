@@ -34,7 +34,7 @@ var clients = [{
             scope: '',
             redirect_uri: 'http://localhost:3001/fhir/callback'
         }
-    }, {
+    }/*, { //commented out for demo/screenshots
         name: 'DRE/FHIR (toolbox.amida-demo.com:3000)',
         url: 'http://toolbox.amida-demo.com:3000/',
         auth_url: 'http://toolbox.amida-demo.com:3000/',
@@ -50,7 +50,7 @@ var clients = [{
             scope: '',
             redirect_uri: 'http://toolbox.amida-demo.com:3001/fhir/callback'
         }
-    }];
+    }*/];
     
 module.exports = {
     //fhir_server_uri: 'https://fhir-dev.healthintersections.com.au/closed'

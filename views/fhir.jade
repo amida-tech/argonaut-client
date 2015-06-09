@@ -1,28 +1,44 @@
 extends layout
 
 block content
-  p
-    a(href='/') Back to start page 
-  div
+  title = "Argonaut Client Demo"
+  nav(class="navbar navbar-default")
+    div(class="container-fluid")
+      div(class="navbar-header")
+        a(class="navbar-brand",href="/") Argonaut Client Demo
+          //img(alt="Brand",src="...")
+  div(class='col-sm-12')
     if prev
       #[a(href=(prev)) <-- Prev ]
     if next
       #[a(href=(next)) Next --> ]
     if patients && patients.length > 0
-      h1 Patient record(s)
-      ul
-        p Get medication prescriptions for:
-        each patient in patients
-          li #[a(href=('/fhir?query=/MedicationPrescription?patient=' + patient.id + '&token_id=' + patient.token_id)) #{patient.name}]
+      div(class='panel panel-default')
+        div(class='panel-heading-custom')
+          h3(class='logo-link') Patient record(s)
+        div(class='panel-body')
+          h3 Get medication prescriptions for:
+          each patient in patients
+            li #[a(href=('/fhir?query=/MedicationPrescription?patient=' + patient.id + '&token_id=' + patient.token_id)) #{patient.name}]
     if medications && medications.length > 0
-      h1 Medication Prescription record(s)
-      ul
-        each medication in medications
-          if medication.status == 'completed'
-            li(class='completed') #{medication.name} #{medication.status}
-          else
-            li #{medication.name} #{medication.status}
-  h1 Raw response on request : #{id}
-  pre(id='json') #{data}
-  p
-    a(href='/') Back to start page 
+      div(class='panel panel-default')
+        div(class='panel-heading-custom')
+          h3(class='logo-link') Medication Prescription record(s)
+        div(class='panel-body')
+          table(class='table table-hover table-bordered table-striped table-condensed')
+                thead
+                  tr
+                    th Medication
+                    th Status
+                    //th Start Date
+                    //th End Date
+                tbody
+                  each medication in medications
+                    tr
+                      td #{medication.name}
+                      td #{medication.status}
+                      //td asdf
+                      //if medication.status == 'active'
+                        //td Present
+          //h1 Raw response on request : #{id}
+          //pre(id='json') #{data}
