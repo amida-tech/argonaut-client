@@ -77,6 +77,8 @@ var render = function(res, token_id, val, prev, next, json) {
     var patients = getPatients(json, token_id);
     var medications = getMedications(json, token_id);
 
+    console.log(medications);
+
     var model = {
         data: val,
         prev: prev,
@@ -124,19 +126,37 @@ var getPatients = function(val, token_id) {
         var i, len = val.entry.length;
         for (i = 0; i < len; i++) {
             var name = [];
+            var family = "";
+            var given = "";
+            var gender = "";
+            var birthdate = "";
             var content = val.entry[i].content || val.entry[i].resource;
             if(content && content.resourceType === 'Patient') {
             if (content.name && content.name.length > 0) {
-                if (content.name[0].family[0]) {
-                    name.push(content.name[0].family[0]);
-                }
                 if (content.name[0].given[0]) {
                     name.push(content.name[0].given[0]);
+                    given = content.name[0].given[0];
+                }
+                if (content.name[0].family[0]) {
+                    name.push(content.name[0].family[0]);
+                    family = content.name[0].family[0];
+                }
+                if (content.gender) {
+                    gender = content.gender;
+                }
+                if (content.birthDate) {
+                    birthdate = content.birthDate;
                 }
             }
             var fullName = name.join(" ");
             result.push({
-                name: fullName,
+                full_name: fullName,
+                name: {
+                    family: family,
+                    given: given
+                },
+                birthdate: birthdate,
+                gender: gender,
                 id: (content.identifier && content.identifier.length>0)?content.identifier[0].value:content.id,
                 token_id: token_id
             });
