@@ -1,0 +1,39 @@
+extends layout
+
+block content
+  title = "Argonaut Client Demo"
+  nav(class="navbar navbar-default")
+    div(class="container-fluid")
+      div(class="navbar-header")
+        a(class="navbar-brand",href="#") Argonaut Client Demo
+  div(class='col-sm-12')
+    div(class='well') The Argonaut Client Demo is a 3rd Party Application that allows you to see patient & medication prescription record(s) on a pre-defined set of FHIR servers.
+    div(class='row')
+      div(class='col-sm-12')
+        div(class='panel panel-default')
+          div(class='panel-heading') Available Clients
+          table(class='table')
+            thead
+              tr
+                th Client
+                th Status
+            tbody
+              each client in clients
+                tr
+                  td(class="client-cell")
+                    if client.name === 'SMART on FHIR'
+                      img(class='logo-smart',src='images/smart_logo.png')
+                    if client.name === 'DRE/FHIR (localhost:3000)'
+                      img(class='logo-amida',src='images/amida-brand.png')
+                    #[a(class='logo-link',href=(client.url), target='_blank') #{client.name} ]
+                  td
+                    if client.userExists
+                      #[a(class="btn btn-success col-sm-8",href=('/fhir?query=/MedicationPrescription?patient=' + client.userInfo[0].resource.id + '&token_id=' + client.user._id)) Connected: #{client.userInfo[0].resource.name[0].given[0]} #{client.userInfo[0].resource.name[0].family}]
+                      #[a(class="btn btn-danger col-sm-3 col-sm-offset-1",href=('#')) Remove]
+                    else
+                      form(name='get', action='/', method='post')
+                        input(type='hidden', name='client_id' value='#{client.credentials.client_id}')
+                        if client.name === 'SMART on FHIR'
+                          input(class='btn btn-primary col-sm-12',type='submit',value='Add a new SMART on FHIR Token')
+                        if client.name === 'DRE/FHIR (localhost:3000)'
+                          input(class='btn btn-primary col-sm-12',type='submit',value='Add a DRE User')

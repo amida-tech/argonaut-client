@@ -6,7 +6,6 @@ block content
     div(class="container-fluid")
       div(class="navbar-header")
         a(class="navbar-brand",href="/") Argonaut Client Demo
-          //img(alt="Brand",src="...")
   div(class='col-sm-12')
     if prev
       #[a(href=(prev)) <-- Prev ]
@@ -15,9 +14,11 @@ block content
     if patients && patients.length > 0
       div(class='panel panel-default')
         div(class='panel-heading-custom')
-          h3(class='logo-link') Patient record(s)
+          if patients.length > 1
+            h3(class='logo-link') Patients
+          if patients.length === 1
+            h3(class='logo-link') Patient
         div(class='panel-body')
-          h3 Get medication prescriptions for:
           table(class='table table-hover table-bordered table-striped table-condensed')
             thead
               tr
@@ -35,22 +36,18 @@ block content
     if medications && medications.length > 0
       div(class='panel panel-default')
         div(class='panel-heading-custom')
-          h3(class='logo-link') Medication Prescription record(s)
+          if medications.length > 1
+            h3(class='logo-link') Prescriptions
+          if medications.length === 1
+            h3(class='logo-link') Prescription
         div(class='panel-body')
           table(class='table table-hover table-bordered table-striped table-condensed')
             thead
               tr
                 th Medication
                 th Status
-                //th Start Date
-                //th End Date
             tbody
               each medication in medications
                 tr
                   td #{medication.name}
                   td #{medication.status}
-                  //td asdf
-                  //if medication.status == 'active'
-                    //td Present
-    //h1 Raw response on request : #{id}
-    //pre(id='json') #{data}
