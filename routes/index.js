@@ -211,7 +211,7 @@ router.get('/dre', function (req, res) {
 router.get('/delete', function(req, res) {
     if (req.query.externalId) {
         dal.users.delete(req.query.externalId, function () {
-            res.redirect("/");
+            res.redirect("/settings");
         });
     }
 });
