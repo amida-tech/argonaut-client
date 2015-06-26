@@ -2,10 +2,12 @@ var express = require('express');
 var router = express.Router();
 var request = require('request');
 var promise = require('promise');
+var config = require('../libs/config');
 
 var dal = require('../libs/dal');
 var fhir = require('../libs/fhir');
 var credentials = require('../libs/credentials');
+var async = require('async');
 
 /**
  * Callback used for exchange of access code to access token 

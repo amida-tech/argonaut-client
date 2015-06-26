@@ -13,32 +13,25 @@ block content
         a(class="navbar-brand",href="#") Argonaut Client Demo
       div(id="navbar",class="navbar-collapse collapse")
         ul(class="nav navbar-nav")
-          li(class="active")
+          li
             a(href="/") Home
         ul(class="nav navbar-nav navbar-right")
           if loggedIn
             li
               a(href="/settings") Settings
-          li
+          li(class="active")
             if loggedIn
               a(href="/logout") Logout
             else
               a(href="/login") Login
-  div(class="col-sm-12 landing-panel")
+    div.container
+      form.form-signin(name='get', action='/login', method='post')
+        h2(class="form-signin-heading") Please sign in
+        label(for="username", class="sr-only") Email address
+        input(type="text", id="username", class="form-control", name="username", placeholder="Username", required, autofocus)
+        label(for="password", class="sr-only") Password
+        input(type="password", id="password", name="password", class="form-control", placeholder="Password", required)
+        input(class='btn btn-primary col-sm-12', type='submit', value='Sign in')
+  div(class="text-center col-md-12 footer hidden-print")
     div.row
-      h1(class="col-sm-offset-1 col-sm-10") Isabella's Medications
-    div.row
-      div(class="col-sm-10 col-sm-offset-1")
-        div(class="panel panel-default landing-login")
-          table(class='table table-hover table-bordered table-striped table-condensed')
-            thead
-              tr
-                th Medication
-                //th Status
-            tbody
-              each medication in medications
-                tr
-                  td #{medication.name}
-    div(class="text-center col-md-12 footer hidden-print")
-      div.row
-        h6 Made by Amida Technology Solutions | Licensed under Creative Commons
+      h6 Made by Amida Technology Solutions | Licensed under Creative Commons

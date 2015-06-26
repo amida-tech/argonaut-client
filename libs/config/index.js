@@ -24,15 +24,16 @@ var clients = [{
     auth_url: 'https://authorize.smarthealthit.org',
     logo_url: '',
     credentials: {
-        client_id: '277923e5-5258-4070-bce7-67194bc62523',
-        client_secret: 'do_Cw29XRO18cLjRPYN-svCOPcspjBxXbLlRvfbNn-UNexm_ig68ABt_gxWYvWAkHWjpuCePMndTXgIdLDtsoA',
+        client_id: "070f1861-9d9a-433b-be73-1e75c9a034dd",
+        client_secret: "bpJnFB3U-aY7c_tj5qXos1xjJCcMwsZL9XlkY3E9SHtnLlB7ros_PSZXsyvMUQS_G9IDShXWUm2jjBghnFllow",
         site: 'https://authorize.smarthealthit.org',
         api_url: 'https://fhir-api.smarthealthit.org',
         authorization_path: '/authorize',
         token_path: '/token',
         revocation_path: '/revoke',
         scope: '',
-        redirect_uri: 'http://toolbox.amida-demo.com:3001/fhir/callback'
+        redirect_uri: 'http://localhost:3001/fhir/callback'
+        //redirect_uri: 'http://toolbox.amida-demo.com:3001/fhir/callback'
     }
 }/*, { //commented out for demo/screenshots
  name: 'DRE/FHIR (toolbox.amida-demo.com:3000)',

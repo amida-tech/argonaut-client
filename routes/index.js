@@ -6,214 +6,241 @@ var fhir = require('../libs/fhir');
 var config = require('../libs/config');
 var Promise = require('promise');
 var async = require('async');
+var loggedIn = false;
+var activeClient = '';
+var activeUser = '';
 
-/* GET home page. */
-/**
- * Simply render content of users table.
- */
-
-/*
 router.get('/', function (req, res) {
-
-    var readUsers = new Promise(function (resolve, reject) {
-        dal.users.readAll(function (err, users) {
-            if (err) reject(err);
-            else resolve(users);
-        });
-    });
-
-    readUsers.then(function (users) {
-        //console.log("Read users success", users);
-        //console.log(config.clients);
+    if (loggedIn) {
+        res.redirect('/home');
+    } else {
         res.render('index', {
             title: 'Express',
-            users: users,
-            clients: config.clients
+            loggedIn: loggedIn
         });
-    }).catch(function (err) {
-        //console.log("Read users fails", err);
-        res.render('error', {
-            message: err,
-            error: err
-        });
-    });
-
+    }
 });
-*/
-router.get('/', function (req, res) {
 
-    var readUsers = new Promise(function (resolve, reject) {
-        dal.users.readAll(function (err, users) {
-            if (err) reject(err);
-            else resolve(users);
-        });
-    });
+router.get('/dre', function(req,res) {
+    activeUser = 'dre';
+    res.redirect("/settings");
+});
 
-    readUsers.then(function (rawUsers) {
-        var users = {};
-        var newClients = [];
-        var clients = config.clients;
-        async.eachSeries(clients,function(client,cb){
-            client.userExists = false;
-            async.eachSeries(rawUsers, function(user,cb2){
-                if (!client.userExists) {
-                    if (user.clientId === client.credentials.client_id) {
-                        client.user = user;
-                        client.userExists = true;
-                        fhir.request(user.clientId, user.accessToken, '/Patient').then(function(val) {
-                            var json = JSON.parse(val);
-                            client.userInfo = json.entry;
-                            cb2();
-                        }).catch(function(err) {
-                            client.userInfo = {};
-                            cb2();
-                        });
-                    } else {
-                        cb2();
-                    }
-                } else {
-                    cb2();
-                }
-            },function(err) {
-                newClients.push(client);
-                cb();
-            })
-        },function(err) {
-            res.render('index', {
-                title: 'Express',
-                users: users,
-                clients: newClients
+router.get('/home', function (req, res) {
+    if (loggedIn) {
+        var readUsers = new Promise(function (resolve, reject) {
+            dal.users.readAll(function (err, users) {
+                if (err) reject(err);
+                else resolve(users);
             });
         });
-    }).catch(function (err) {
-        res.render('error', {
-            message: err,
-            error: err
+
+        //if (activeUser === 'dre') {
+            readUsers.then(function (rawUsers) {
+                var useClient = {};
+                var medications = [];
+                var userExists = false;
+                var clients = config.clients;
+                async.eachSeries(clients,function(client,cb){
+                    if (client.name === 'DRE/FHIR (localhost:3000)') {
+                        useClient = client;
+                        async.eachSeries(rawUsers, function(user,cb2){
+                            if (user.clientId === client.credentials.client_id) {
+                                client.user = user;
+                                useClient = client;
+                                userExists = true;
+                                //'/fhir?query=/MedicationPrescription?patient=' + patient.id + '&token_id=' + patient.token_id
+                                fhir.request(user.clientId, user.accessToken, '/MedicationPrescription').then(function(val) {
+                                    var json = JSON.parse(val);
+                                    medications = getMedications(json);
+                                    console.log(getMedications);
+                                    cb2();
+                                }).catch(function(err) {
+                                    medications = [];
+                                    cb2();
+                                });
+                            } else {
+                                cb2();
+                            }
+                        },function(err) {
+                            cb();
+                        })
+                    } else {
+                        cb();
+                    }
+                },function(err) {
+                    if (userExists) {
+                        res.render('dre', {
+                            title: 'Express',
+                            client: useClient,
+                            userExists: userExists,
+                            medications: medications,
+                            loggedIn: loggedIn
+                        });
+                    } else {
+                        res.render('home', {
+                            title: 'Express',
+                            loggedIn: loggedIn
+                        });
+                    }
+                });
+            }).catch(function (err) {
+                res.render('error', {
+                    message: err,
+                    error: err
+                });
+            });
+        /*}
+        if (activeUser === 'smart') {
+            //is SMART
+            readUsers.then(function (rawUsers) {
+                var useClient = {};
+                var medications = [];
+                var userExists = false;
+                var clients = config.clients;
+                async.eachSeries(clients,function(client,cb){
+                    if (client.name === 'SMART on FHIR') {
+                        useClient = client;
+                        async.eachSeries(rawUsers, function(user,cb2){
+                            if (user.clientId === client.credentials.client_id) {
+                                client.user = user;
+                                useClient = client;
+                                userExists = true;
+                                //'/fhir?query=/MedicationPrescription?patient=' + patient.id + '&token_id=' + patient.token_id
+                                fhir.request(user.clientId, user.accessToken, '/MedicationPrescription').then(function(val) {
+                                    var json = JSON.parse(val);
+                                    medications = getMedications(json);
+                                    console.log(getMedications);
+                                    cb2();
+                                }).catch(function(err) {
+                                    medications = [];
+                                    cb2();
+                                });
+                            } else {
+                                cb2();
+                            }
+                        },function(err) {
+                            cb();
+                        })
+                    } else {
+                        cb();
+                    }
+                },function(err) {
+                    res.render('dre', {
+                        title: 'Express',
+                        client: useClient,
+                        userExists: userExists,
+                        medications: medications,
+                        loggedIn: loggedIn
+                    });
+                });
+            }).catch(function (err) {
+                res.render('error', {
+                    message: err,
+                    error: err
+                });
+            });
+        } */
+    } else {
+        res.render('index', {
+            title: 'Express',
+            loggedIn: loggedIn
         });
-    });
+    }
 });
 
 router.get('/settings', function (req, res) {
-
-    var readUsers = new Promise(function (resolve, reject) {
-        dal.users.readAll(function (err, users) {
-            if (err) reject(err);
-            else resolve(users);
+    if (loggedIn) {
+        var readUsers = new Promise(function (resolve, reject) {
+            dal.users.readAll(function (err, users) {
+                if (err) reject(err);
+                else resolve(users);
+            });
         });
-    });
 
-    readUsers.then(function (rawUsers) {
-        var users = {};
-        var newClients = [];
-        var clients = config.clients;
-        async.eachSeries(clients,function(client,cb){
-            client.userExists = false;
-            async.eachSeries(rawUsers, function(user,cb2){
-                if (!client.userExists) {
-                    if (user.clientId === client.credentials.client_id) {
-                        client.user = user;
-                        client.userExists = true;
-                        fhir.request(user.clientId, user.accessToken, '/Patient').then(function(val) {
-                            var json = JSON.parse(val);
-                            client.userInfo = json.entry;
+        readUsers.then(function (rawUsers) {
+            var users = {};
+            var newClients = [];
+            var clients = config.clients;
+            async.eachSeries(clients, function (client, cb) {
+                client.userExists = false;
+                async.eachSeries(rawUsers, function (user, cb2) {
+                    if (!client.userExists) {
+                        if (user.clientId === client.credentials.client_id) {
+                            client.user = user;
+                            client.userExists = true;
+                            fhir.request(user.clientId, user.accessToken, '/Patient').then(function (val) {
+                                var json = JSON.parse(val);
+                                client.userInfo = json.entry;
+                                cb2();
+                            }).catch(function (err) {
+                                client.userInfo = {};
+                                cb2();
+                            });
+                        } else {
                             cb2();
-                        }).catch(function(err) {
-                            client.userInfo = {};
-                            cb2();
-                        });
+                        }
                     } else {
                         cb2();
                     }
-                } else {
-                    cb2();
-                }
-            },function(err) {
-                newClients.push(client);
-                cb();
-            })
-        },function(err) {
-            console.log("new clients: "+JSON.stringify(newClients,null,4));
-            res.render('settings', {
-                title: 'Express',
-                users: users,
-                clients: newClients
+                }, function (err) {
+                    newClients.push(client);
+                    cb();
+                })
+            }, function (err) {
+                res.render('settings', {
+                    title: 'Express',
+                    users: users,
+                    clients: newClients,
+                    loggedIn: loggedIn
+                });
+            });
+        }).catch(function (err) {
+            res.render('error', {
+                message: err,
+                error: err
             });
         });
-    }).catch(function (err) {
-        res.render('error', {
-            message: err,
-            error: err
-        });
-    });
+    } else {
+        res.redirect('/');
+    }
 });
 
 router.get('/smart', function (req, res) {
-    res.redirect();
-});
-
-router.get('/dre', function (req, res) {
-
-    var readUsers = new Promise(function (resolve, reject) {
-        dal.users.readAll(function (err, users) {
-            if (err) reject(err);
-            else resolve(users);
-        });
-    });
-
-    readUsers.then(function (rawUsers) {
-        var useClient = {};
-        var medications = [];
-        var userExists = false;
-        var clients = config.clients;
-        async.eachSeries(clients,function(client,cb){
-            if (client.name === 'DRE/FHIR (localhost:3000)') {
-                useClient = client;
-                async.eachSeries(rawUsers, function(user,cb2){
-                    if (user.clientId === client.credentials.client_id) {
-                        client.user = user;
-                        useClient = client;
-                        userExists = true;
-                        //'/fhir?query=/MedicationPrescription?patient=' + patient.id + '&token_id=' + patient.token_id
-                        fhir.request(user.clientId, user.accessToken, '/MedicationPrescription').then(function(val) {
-                            var json = JSON.parse(val);
-                            medications = getMedications(json);
-                            console.log(getMedications);
-                            cb2();
-                        }).catch(function(err) {
-                            medications = [];
-                            cb2();
-                        });
-                    } else {
-                        cb2();
-                    }
-                },function(err) {
-                    cb();
-                })
-            } else {
-                cb();
-            }
-        },function(err) {
-            res.render('dre', {
-                title: 'Express',
-                client: useClient,
-                userExists: userExists,
-                medications: medications
-            });
-        });
-    }).catch(function (err) {
-        res.render('error', {
-            message: err,
-            error: err
-        });
-    });
+    res.redirect('/');
 });
 
 router.get('/delete', function(req, res) {
+    activeClient = '';
     if (req.query.externalId) {
         dal.users.delete(req.query.externalId, function () {
             res.redirect("/settings");
         });
     }
+});
+
+router.get('/logout', function(req,res) {
+    loggedIn = false;
+    res.redirect('/');
+});
+
+router.get('/login', function(req,res) {
+    res.redirect('/');
+});
+
+router.post('/login', function(req,res) {
+    //var username = req.body.username;
+
+    //var password = req.body.password;
+    loggedIn = true;
+    /*
+    if (username === 'isabella') {
+        //activeUser = 'dre';
+    } else {
+        //activeUser = 'smart';
+    }
+    */
+    res.redirect('/home');
 });
 
 /**
