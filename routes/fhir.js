@@ -18,16 +18,16 @@ router.get('/callback', function(req, res) {
             console.log('body----------------------------------------', body);
             if (body) {
                 dal.users.save(body.client_id || client_id, body.patient, body.access_token, body.refresh_token, body.expires_in, body.scope, function(err, user) {
-                    res.redirect("/");
+                    res.redirect("/dre");
                 });
             } else {
-                res.redirect("/");
+                res.redirect("/settings");
             }
         }).catch(function(error) {
             console.log(error);
         });
     } else {
-        res.redirect("/");
+        res.redirect("/settings");
     }
 });
 

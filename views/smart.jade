@@ -15,9 +15,9 @@ block content
         ul(class="nav navbar-nav")
           li
             a(href="/") Home
-          li(class="active")
-            a(href="/dre") DRE
           li
+            a(href="/dre") DRE
+          li(class="active disabled")
             a(href="/smart") SMART
         ul(class="nav navbar-nav navbar-right")
           li
@@ -53,17 +53,17 @@ block content
       div(class='panel panel-default')
         div(class='panel-heading-custom')
           if medications.length > 1
-            h3(class='logo-link') Medications
+            h3(class='logo-link') Prescriptions
           if medications.length === 1
-            h3(class='logo-link') Medication
+            h3(class='logo-link') Prescription
         div(class='panel-body')
           table(class='table table-hover table-bordered table-striped table-condensed')
             thead
               tr
                 th Medication
-                //th Status
+                th Status
             tbody
               each medication in medications
                 tr
                   td #{medication.name}
-                  //td #{medication.status}
+                  td #{medication.status}

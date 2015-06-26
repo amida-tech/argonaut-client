@@ -3,9 +3,9 @@
 }
 
 .table td {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    white-space: normal;
+    #overflow: hidden;
+    #text-overflow: ellipsis;
 }
 
 .logo-smart {
@@ -24,11 +24,12 @@
 }
 
 .panel-default {
-  border-color: #ddd;
+    border-color: #ddd;
 }
+
 .client-cell, .panel-heading-custom {
-  color: #333;
-  background-color: #3F3F3F;
-  border-color: #ddd;
-  padding: 10px;
+    color: #333;
+    background-color: #3F3F3F;
+    border-color: #ddd;
+    padding: 10px;
 }

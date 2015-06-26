@@ -1,0 +1,43 @@
+extends layout
+
+block content
+  title = "Argonaut Client Demo"
+  nav(class="navbar navbar-default navbar-static-top")
+    div(class="container")
+      div(class="navbar-header")
+        button(type="button",class="navbar-toggle collapsed",data-toggle="collapse",data-target="#navbar",aria-expanded="false",aria-controls="navbar")
+          span(class="sr-only") Toggle navigation
+          span(class="icon-bar")
+          span(class="icon-bar")
+          span(class="icon-bar")
+        a(class="navbar-brand",href="#") Argonaut Client Demo
+      div(id="navbar",class="navbar-collapse collapse")
+        ul(class="nav navbar-nav")
+          li
+            a(href="/") Home
+          li(class="active")
+            a(href="/dre") DRE
+          li(class="disabled")
+            a(href="/smart") SMART
+        ul(class="nav navbar-nav navbar-right")
+          li
+            a(href="/settings") Settings
+  div(class='col-sm-12')
+    if !userExists
+      form(name='get', action='/', method='post')
+        input(type='hidden', name='client_id' value='#{client.credentials.client_id}')
+        input(class='btn btn-primary col-sm-12',type='submit',value='Add a DRE User')
+    if medications && medications.length === 0
+      div(class='well') Connected to DRE but there are No Medications
+    if medications && medications.length > 0
+      div(class='panel panel-default')
+        table(class='table table-hover table-bordered table-striped table-condensed')
+          thead
+            tr
+              th Medication
+              //th Status
+          tbody
+            each medication in medications
+              tr
+                td #{medication.name}
+                //td #{medication.status}

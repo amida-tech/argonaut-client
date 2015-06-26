@@ -2,16 +2,31 @@ extends layout
 
 block content
   title = "Argonaut Client Demo"
-  nav(class="navbar navbar-default")
-    div(class="container-fluid")
+  nav(class="navbar navbar-default navbar-static-top")
+    div(class="container")
       div(class="navbar-header")
+        button(type="button",class="navbar-toggle collapsed",data-toggle="collapse",data-target="#navbar",aria-expanded="false",aria-controls="navbar")
+          span(class="sr-only") Toggle navigation
+          span(class="icon-bar")
+          span(class="icon-bar")
+          span(class="icon-bar")
         a(class="navbar-brand",href="#") Argonaut Client Demo
+      div(id="navbar",class="navbar-collapse collapse")
+        ul(class="nav navbar-nav")
+          li
+            a(href="/") Home
+          li
+            a(href="/dre") DRE
+          li(class="disabled")
+            a(href="/smart") SMART
+        ul(class="nav navbar-nav navbar-right")
+          li(class="active")
+            a(href="/settings") Settings
   div(class='col-sm-12')
     div(class='well') The Argonaut Client Demo is a 3rd Party Application that allows you to see patient & medication prescription record(s) on a pre-defined set of FHIR servers.
     div(class='row')
       div(class='col-sm-12')
         div(class='panel panel-default')
-          div(class='panel-heading') Available Clients
           table(class='table')
             thead
               tr
@@ -29,11 +44,11 @@ block content
                   td
                     if client.userExists
                       #[a(class="btn btn-success col-sm-8",href=('/fhir?query=/MedicationPrescription?patient=' + client.userInfo[0].resource.id + '&token_id=' + client.user._id)) Connected: #{client.userInfo[0].resource.name[0].given[0]} #{client.userInfo[0].resource.name[0].family}]
-                      #[a(class="btn btn-danger col-sm-3 col-sm-offset-1",href=('#')) Remove]
+                      #[a(class="btn btn-danger col-sm-3 col-sm-offset-1",href=('/delete?externalId=' + client.user.externalId)) Remove]
                     else
                       form(name='get', action='/', method='post')
                         input(type='hidden', name='client_id' value='#{client.credentials.client_id}')
                         if client.name === 'SMART on FHIR'
-                          input(class='btn btn-primary col-sm-12',type='submit',value='Add a new SMART on FHIR Token')
+                          input(class='btn btn-primary col-sm-12 disabled',type='submit',value='Add SMART on FHIR Token')
                         if client.name === 'DRE/FHIR (localhost:3000)'
                           input(class='btn btn-primary col-sm-12',type='submit',value='Add a DRE User')
