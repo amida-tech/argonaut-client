@@ -28,10 +28,13 @@
                                     <img ng-class="client.imgclass" ng-src="{{client.imgsrc}}"/> {{client.name}}
                                 </td>
                                 <td>
-                                    <form name="get" action="/fhir" method="post">
+                                    <form name="get" action="/fhir" method="post" ng-hide="client.token">
                                         <input type='hidden' name='client_id' value='{{client.credentials.client_id}}'>
                                         <input class='btn btn-primary col-sm-12' type='submit' value='Connect to {{client.shortname}}'>
                                     </form>
+                                    <div ng-show="client.token">
+                                        <a href="" ng-click="revokeToken()">Connected to {{client.shortname}} as {{client.userInfo[0].resource.name[0].given[0]}} {{client.userInfo[0].resource.name[0].family}}</a>
+                                    </div>
                                 </td>
                             </tr>
                         </tbody>

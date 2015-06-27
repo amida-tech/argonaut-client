@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('angularPassportApp')
-    .factory('Auth', function Auth($location, $rootScope, Session, User, $cookieStore) {
+    .factory('Auth', function Auth($location, $rootScope, Session, User, FHIR, $cookieStore) {
         $rootScope.currentUser = $cookieStore.get('user') || null;
         $cookieStore.remove('user');
 
@@ -48,6 +48,38 @@ angular.module('angularPassportApp')
             currentUser: function () {
                 Session.get(function (user) {
                     $rootScope.currentUser = user;
+                });
+            },
+
+            getDREUserInfo: function () {
+                FHIR.dreuser.get(function(userInfo){
+                    $rootScope.userInfo = userInfo;
+                })
+            },
+
+            getSMARTUserInfo: function () {
+                FHIR.smartuser.get(function(userInfo){
+                    $rootScope.userInfo = userInfo;
+                })
+            },
+
+            getDREMeds: function () {
+                FHIR.dremeds.get(function(medications){
+                    $rootScope.medications = medications;
+                })
+            },
+
+            getSMARTMeds: function () {
+                FHIR.smartmeds.get(function(medications){
+                    $rootScope.medications = medications;
+                })
+            },
+
+            revokeToken: function () {
+                FHIR.revokeToken.get(function(){
+                    Session.get(function (user) {
+                        $rootScope.currentUser = user;
+                    });
                 });
             },
 
