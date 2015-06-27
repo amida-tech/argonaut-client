@@ -1,2 +1,46 @@
-<h2 ng-show="!currentUser">Welcome. Please log in.</h2>
-<h2 ng-show="currentUser">Hello {{currentUser.username}}</h2>
+<div class="col-sm-12 landing-panel">
+    <div class="row">
+        <div class="col-sm-offset-1 col-sm-11">
+            <h1>Your Connections</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-10 col-sm-offset-1">
+            <div class="panel panel-default landing-login">
+                <div class="panel-body">
+                    <div class="well">
+                        Only One Client May Be Connected At a Time
+                    </div>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>
+                                    Client
+                                </th>
+                                <th>
+                                    Status
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="client in currentUser.clients">
+                                <td class="client-cell">
+                                    <img ng-class="client.imgclass" ng-src="{{client.imgsrc}}"/> {{client.name}}
+                                </td>
+                                <td>
+                                    <form name="get" action="/api/" method="post">
+                                        <input type='hidden' name='client_id' value='#{client.credentials.client_id}'>
+                                        <input class='btn btn-primary col-sm-12' type='submit' value='Connect to {{client.shortname}}'>
+                                    </form>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="well">
+                        <pre>{{currentUser | json}}</pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
