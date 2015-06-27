@@ -28,8 +28,8 @@
                                     <img ng-class="client.imgclass" ng-src="{{client.imgsrc}}"/> {{client.name}}
                                 </td>
                                 <td>
-                                    <form name="get" action="/api/" method="post">
-                                        <input type='hidden' name='client_id' value='#{client.credentials.client_id}'>
+                                    <form name="get" action="/fhir" method="post">
+                                        <input type='hidden' name='client_id' value='{{client.credentials.client_id}}'>
                                         <input class='btn btn-primary col-sm-12' type='submit' value='Connect to {{client.shortname}}'>
                                     </form>
                                 </td>
