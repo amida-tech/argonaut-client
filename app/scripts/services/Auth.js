@@ -51,6 +51,10 @@ angular.module('angularPassportApp')
                 });
             },
 
+            connectFHIR: function(user, client_id) {
+                FHIR.connect.save({user: user, client_id: client_id});
+            },
+
             getDREUserInfo: function () {
                 FHIR.dreuser.get(function(userInfo){
                     $rootScope.userInfo = userInfo;

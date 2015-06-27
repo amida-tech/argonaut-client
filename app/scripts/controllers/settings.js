@@ -11,6 +11,15 @@ angular.module('angularPassportApp')
             }
         }
 
+        $scope.switchOn = function(client) {
+            console.log("here "+client.shortname);
+            Auth.connectFHIR($rootScope.currentUser, client.credentials.client_id);
+        };
+
+        $scope.switchOff = function() {
+            Auth.revokeToken();
+        };
+
         $scope.revokeToken = function() {
             Auth.revokeToken();
         }
