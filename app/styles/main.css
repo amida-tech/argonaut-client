@@ -12,6 +12,10 @@ body {
     color: #333;
 }
 
+* {
+    margin: 0;
+}
+
 .signup-well {
     padding: 19px;
     margin-bottom: 20px;
@@ -121,6 +125,13 @@ body {
 
 .landing-text {
     color: #6aa6ff;
+}
+
+.container {
+    margin-right: auto;
+    margin-left: auto;
+    padding-left: 0px;
+    padding-right: 0px;
 }
 
 .panel-dark {
