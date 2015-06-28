@@ -48,6 +48,29 @@ angular.module('angularPassportApp')
             currentUser: function () {
                 Session.get(function (user) {
                     $rootScope.currentUser = user;
+                    /*
+                    if (user.dreToken) {
+                        for (var i = 0; i < user.clients; i++){
+                            if (user.clients[i].shortname === 'DRE') {
+                                console.log("here");
+                                FHIR.dreuser.get({client_id: user.clients[i].credentials.client_id, user: user._id},function(userInfo){
+                                    $rootScope.patient = userInfo;
+                                });
+                                FHIR.dremeds.get({client_id: user.clients[i].credentials.client_id, user: user._id},function(medications){
+                                    $rootScope.medications = medications;
+                                });
+                            }
+                        }
+                    }
+                    if (user.smartToken) {
+                        FHIR.smartuser.get(function(userInfo){
+                            $rootScope.patient = userInfo;
+                        });
+                        FHIR.smartmeds.get(function(medications){
+                            $rootScope.medications = medications;
+                        });
+                    }
+                    */
                 });
             },
 
@@ -55,27 +78,27 @@ angular.module('angularPassportApp')
                 FHIR.connect.save({user: user, client_id: client_id});
             },
 
-            getDREUserInfo: function () {
-                FHIR.dreuser.get(function(userInfo){
-                    $rootScope.userInfo = userInfo;
+            getDREUserInfo: function (user, client_id) {
+                FHIR.dreuser.save({client_id: client_id, user: user},function(userInfo){
+                    $rootScope.patient = userInfo;
                 })
             },
 
             getSMARTUserInfo: function () {
-                FHIR.smartuser.get(function(userInfo){
-                    $rootScope.userInfo = userInfo;
+                FHIR.smartuser.save({client_id: client_id, user: user},function(userInfo){
+                    $rootScope.patient = userInfo;
                 })
             },
 
-            getDREMeds: function () {
-                FHIR.dremeds.get(function(medications){
-                    $rootScope.medications = medications;
+            getDREMeds: function (user, client_id) {
+                FHIR.dremeds.save({client_id: client_id, user: user},function(medications){
+                    $rootScope.medications = medications.meds;
                 })
             },
 
             getSMARTMeds: function () {
-                FHIR.smartmeds.get(function(medications){
-                    $rootScope.medications = medications;
+                FHIR.smartmeds.save({client_id: client_id, user: user},function(medications){
+                    $rootScope.medications = medications.meds;
                 })
             },
 

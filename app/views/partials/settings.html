@@ -20,8 +20,7 @@
                                     <img ng-class="client.imgclass" ng-src="{{client.imgsrc}}"/> {{client.name}}
                                 </div>
                                 <div ng-show="client.token">
-                                    <button class="btn btn-success col-sm-4 col-sm-offset-1"><p>Connected to {{client.shortname}}</p><p>Go to Medications</p></button>
-                                    <button class="btn btn-danger col-sm-2 col-sm-offset-1" ng-click="revokeToken()">Remove</button>
+                                    <button class="btn btn-danger col-sm-6 col-sm-offset-1" ng-click="revokeToken()">Disconnect</button>
                                 </div>
                                 <div ng-hide="client.token">
                                     <form name="get" action="/fhir" method="post">
@@ -37,7 +36,10 @@
                     </div>
 
                     <div class="row col-sm-12">
-                        <pre class="col-sm-12">{{currentUser | json}}</pre>
+                        <pre class="col-sm-12">{{patient | json}}</pre>
+                    </div>
+                    <div class="row col-sm-12">
+                        <pre class="col-sm-12">{{medications | json}}</pre>
                     </div>
                 </div>
             </div>
