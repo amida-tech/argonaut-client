@@ -84,7 +84,7 @@ angular.module('angularPassportApp')
                 })
             },
 
-            getSMARTUserInfo: function () {
+            getSMARTUserInfo: function (user, client_id) {
                 FHIR.smartuser.save({client_id: client_id, user: user},function(userInfo){
                     $rootScope.patient = userInfo;
                 })
@@ -96,7 +96,7 @@ angular.module('angularPassportApp')
                 })
             },
 
-            getSMARTMeds: function () {
+            getSMARTMeds: function (user, client_id) {
                 FHIR.smartmeds.save({client_id: client_id, user: user},function(medications){
                     $rootScope.medications = medications.meds;
                 })

@@ -23,23 +23,24 @@
                                     <button class="btn btn-danger col-sm-6 col-sm-offset-1" ng-click="revokeToken()">Disconnect</button>
                                 </div>
                                 <div ng-hide="client.token">
-                                    <form name="get" action="/fhir" method="post">
-                                        <input type='hidden' name='client_id' value='{{client.credentials.client_id}}'>
-                                        <input class='btn btn-primary col-sm-6 col-sm-offset-1' type='submit' value='Connect to {{client.shortname}}'>
-                                    </form>
+                                    <div ng-if="client.shortname ==='DRE'" ng-show="currentUser.smartToken">
+                                        <p class="col-sm-6 col-sm-offset-1">Disconnect SMART on FHIR to connect to DRE</p>
+                                    </div>
+                                    <div ng-if="client.shortname ==='SMART on FHIR'" ng-show="currentUser.dreToken">
+                                        <p class="col-sm-6 col-sm-offset-1">Disconnect DRE to connect to SMART on FHIR</p>
+                                    </div>
+                                    <div ng-if="!currentUser.smartToken && !currentUser.dreToken">
+                                        <form name="get" action="/fhir" method="post">
+                                            <input type='hidden' name='client_id' value='{{client.credentials.client_id}}'>
+                                            <input class='btn btn-primary col-sm-6 col-sm-offset-1' type='submit' value='Connect to {{client.shortname}}'>
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
                             <div class="row col-sm-12">
                                 <hr/>
                             </div>
                         </div>
-                    </div>
-
-                    <div class="row col-sm-12">
-                        <pre class="col-sm-12">{{patient | json}}</pre>
-                    </div>
-                    <div class="row col-sm-12">
-                        <pre class="col-sm-12">{{medications | json}}</pre>
                     </div>
                 </div>
             </div>
