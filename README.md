@@ -25,6 +25,8 @@ Register a User and Connect to DRE or SMART
 ##Customization
 For deployment, customize `lib/config/credentials.js` with the clients you would like to connect to.  In particular, replace the DRE client localhost with the location of your DRE instance.
 
+Replace all localhosts with your deployment location!
+
 ##Notes
 * Demo client removes expired tokens from a database automatically.
 * Error handling is not 100% bullet proof.
