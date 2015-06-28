@@ -5,26 +5,7 @@ angular.module('angularPassportApp')
         $scope.error = {};
         $scope.user = {};
 
-        $scope.login = function (form) {
-            Auth.login('password', {
-                    'email': $scope.user.email,
-                    'password': $scope.user.password
-                },
-                function (err) {
-                    $scope.errors = {};
-
-                    if (!err) {
-                        $location.path('/');
-                    } else {
-                        angular.forEach(err.errors, function (error, field) {
-                            form[field].$setValidity('mongoose', false);
-                            $scope.errors[field] = error.type;
-                        });
-                        $scope.error.other = err.message;
-                    }
-                });
-        };
-        if ($rootScope.currentUser) {
+        function update () {
             for (var i = 0; i < $rootScope.currentUser.clients.length; i++) {
                 if ($rootScope.currentUser.clients[i].shortname === 'DRE') {
                     $rootScope.currentUser.clients[i].token = $rootScope.currentUser.dreToken;
@@ -41,6 +22,30 @@ angular.module('angularPassportApp')
                     }
                 }
             }
+        };
+
+        $scope.login = function (form) {
+            Auth.login('password', {
+                    'email': $scope.user.email,
+                    'password': $scope.user.password
+                },
+                function (err) {
+                    $scope.errors = {};
+
+                    if (!err) {
+                        update();
+                        $location.path('/');
+                    } else {
+                        angular.forEach(err.errors, function (error, field) {
+                            form[field].$setValidity('mongoose', false);
+                            $scope.errors[field] = error.type;
+                        });
+                        $scope.error.other = err.message;
+                    }
+                });
+        };
+        if ($rootScope.currentUser) {
+            update();
         }
 
         $scope.revokeToken = function () {
