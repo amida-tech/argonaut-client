@@ -47,8 +47,8 @@ angular.module('angularPassportApp')
                     });
             },
 
-            currentUser: function () {
-                Session.get(function (user) {
+            currentUser: function (cb) {
+                Session.get(function () {
                     $rootScope.currentUser = user;
                 });
             },

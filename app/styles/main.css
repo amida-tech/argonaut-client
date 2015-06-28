@@ -108,6 +108,20 @@ body {
 .text-light {
     color: #FFFFFF;
 }
+.landing-panel {
+    background: #fff;
+    padding: 20px;
+    background-image: url("../images/splash.jpeg");
+    background-repeat: no-repeat;
+    background-position: left center;
+    background-size: 1600px;
+    background-color: #333333;
+    min-height: 400px;
+}
+
+.landing-text {
+    color: #6aa6ff;
+}
 
 .panel-dark {
     color: #333;
