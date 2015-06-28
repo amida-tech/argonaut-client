@@ -26,6 +26,8 @@ angular.module('angularPassportApp')
                 var cb = callback || angular.noop;
                 Session.delete(function (res) {
                         $rootScope.currentUser = null;
+                        $rootScope.medications = [];
+                        $rootScope.patient = null;
                         return cb();
                     },
                     function (err) {
@@ -48,29 +50,6 @@ angular.module('angularPassportApp')
             currentUser: function () {
                 Session.get(function (user) {
                     $rootScope.currentUser = user;
-                    /*
-                    if (user.dreToken) {
-                        for (var i = 0; i < user.clients; i++){
-                            if (user.clients[i].shortname === 'DRE') {
-                                console.log("here");
-                                FHIR.dreuser.get({client_id: user.clients[i].credentials.client_id, user: user._id},function(userInfo){
-                                    $rootScope.patient = userInfo;
-                                });
-                                FHIR.dremeds.get({client_id: user.clients[i].credentials.client_id, user: user._id},function(medications){
-                                    $rootScope.medications = medications;
-                                });
-                            }
-                        }
-                    }
-                    if (user.smartToken) {
-                        FHIR.smartuser.get(function(userInfo){
-                            $rootScope.patient = userInfo;
-                        });
-                        FHIR.smartmeds.get(function(medications){
-                            $rootScope.medications = medications;
-                        });
-                    }
-                    */
                 });
             },
 
