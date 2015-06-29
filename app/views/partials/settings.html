@@ -1,0 +1,54 @@
+<div class="col-sm-12">
+    <div class="row">
+        <div class="col-sm-offset-1 col-sm-11">
+            <h1 class="settings-space">Your Settings</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="panel panel-default landing-login">
+                <div class="panel-body panel-dark">
+                    <div class="row col-sm-12">
+                        <div ng-repeat="client in clients">
+                            <div class="row col-sm-12">
+                                <div class="col-sm-7">
+                                    <div class="row">
+                                        <div class="col-sm-3">
+                                            <img ng-class="client.imgclass" ng-src="images/{{client.imgsrc}}"/>
+                                        </div>
+                                        <div class="col-sm-9">
+                                            <span class="logo-link">{{client.name}}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div ng-if="(client.shortname === 'DRE' && currentUser.dreToken) || (client.shortname === 'SMART on FHIR' && currentUser.smartToken)">
+                                    <button class="btn btn-primary col-sm-4 col-sm-offset-1" ng-click="revokeToken()">Disconnect</button>
+                                </div>
+                                <div>
+                                    <div ng-if="client.shortname ==='DRE'" ng-show="currentUser.smartToken">
+                                        <p class="col-sm-4 col-sm-offset-1 text-light">Disconnect SMART on FHIR to connect to DRE</p>
+                                    </div>
+                                    <div ng-if="client.shortname ==='SMART on FHIR'" ng-show="currentUser.dreToken">
+                                        <p class="col-sm-4 col-sm-offset-1 text-light">Disconnect DRE to connect to SMART on FHIR</p>
+                                    </div>
+                                    <div ng-if="!currentUser.smartToken && !currentUser.dreToken">
+                                        <form name="get" action="/fhir" method="post">
+                                            <input type='hidden' name='client_id' value='{{client.credentials.client_id}}'>
+                                            <input class='btn btn-primary col-sm-4 col-sm-offset-1' type='submit' value='Connect'>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr class="row col-sm-12"/>
+                        </div>
+                    </div>
+                    <div class="row col-sm-12">
+                        <div class="alert alert-warning" role="alert">
+                            Only one client may be connected at a time.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
