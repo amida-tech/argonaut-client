@@ -9,15 +9,15 @@
             <div class="panel panel-default landing-login">
                 <div class="panel-body panel-dark">
                     <div class="row col-sm-12">
-                        <div ng-repeat="client in currentUser.clients">
+                        <div ng-repeat="client in clients">
                             <div class="row col-sm-12">
                                 <div class="col-sm-7">
                                     <img ng-class="client.imgclass" ng-src="images/{{client.imgsrc}}"/> <span class="logo-link">{{client.name}}</span>
                                 </div>
-                                <div ng-show="client.token">
+                                <div ng-if="(client.shortname === 'DRE' && currentUser.dreToken) || (client.shortname === 'SMART on FHIR' && currentUser.smartToken)">
                                     <button class="btn btn-primary col-sm-4 col-sm-offset-1" ng-click="revokeToken()">Disconnect</button>
                                 </div>
-                                <div ng-hide="client.token">
+                                <div>
                                     <div ng-if="client.shortname ==='DRE'" ng-show="currentUser.smartToken">
                                         <p class="col-sm-4 col-sm-offset-1 text-light">Disconnect SMART on FHIR to connect to DRE</p>
                                     </div>

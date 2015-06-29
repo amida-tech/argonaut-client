@@ -47,6 +47,16 @@ angular.module('angularPassportApp')
                     });
             },
 
+            getClients: function (cb) {
+                FHIR.getClients.get(function(clients){
+                    $rootScope.clients = clients.clients;
+                    cb();
+                }, function(err){
+                    console.log(err);
+                    cb();
+                });
+            },
+
             currentUser: function (cb) {
                 Session.get(function () {
                     $rootScope.currentUser = user;

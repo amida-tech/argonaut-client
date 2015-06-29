@@ -8,6 +8,7 @@ angular.module('angularPassportApp')
             dremeds: $resource('/fhir/dre/meds'),
             smartmeds: $resource('/fhir/smart/meds'),
             revokeToken: $resource('/fhir/revoke'),
-            connect: $resource('/fhir/connect')
+            connect: $resource('/fhir/connect'),
+            getClients: $resource('/fhir/clients')
         };
     });

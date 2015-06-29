@@ -6,22 +6,22 @@ angular.module('angularPassportApp')
         $scope.user = {};
 
         function update () {
-            for (var i = 0; i < $rootScope.currentUser.clients.length; i++) {
-                if ($rootScope.currentUser.clients[i].shortname === 'DRE') {
-                    $rootScope.currentUser.clients[i].token = $rootScope.currentUser.dreToken;
-                    if ($rootScope.currentUser.clients[i].token) {
-                        Auth.getDREUserInfo($rootScope.currentUser._id, $rootScope.currentUser.clients[i].credentials.client_id);
-                        Auth.getDREMeds($rootScope.currentUser._id, $rootScope.currentUser.clients[i].credentials.client_id);
+            Auth.getClients(function(){
+                for (var i = 0; i < $rootScope.clients.length; i++) {
+                    if ($rootScope.clients[i].shortname === 'DRE') {
+                        if ($rootScope.currentUser.dreToken) {
+                            Auth.getDREUserInfo($rootScope.currentUser._id, $rootScope.clients[i].credentials.client_id);
+                            Auth.getDREMeds($rootScope.currentUser._id, $rootScope.clients[i].credentials.client_id);
+                        }
+                    }
+                    if ($rootScope.clients[i].shortname === 'SMART on FHIR') {
+                        if ($rootScope.currentUser.smartToken) {
+                            Auth.getSMARTUserInfo($rootScope.currentUser._id, $rootScope.clients[i].credentials.client_id);
+                            Auth.getSMARTMeds($rootScope.currentUser._id, $rootScope.clients[i].credentials.client_id);
+                        }
                     }
                 }
-                if ($rootScope.currentUser.clients[i].shortname === 'SMART on FHIR') {
-                    $rootScope.currentUser.clients[i].token = $rootScope.currentUser.smartToken;
-                    if ($rootScope.currentUser.clients[i].token) {
-                        Auth.getSMARTUserInfo($rootScope.currentUser._id, $rootScope.currentUser.clients[i].credentials.client_id);
-                        Auth.getSMARTMeds($rootScope.currentUser._id, $rootScope.currentUser.clients[i].credentials.client_id);
-                    }
-                }
-            }
+            });
         };
 
         $scope.login = function (form) {
