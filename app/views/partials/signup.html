@@ -1,9 +1,9 @@
-<div class="col-sm-12 landing-panel">
+<div class="col-sm-12 landing-panel" ng-hide="currentUser">
     <div class="row main-body">
         <div class="col-sm-offset-1 col-sm-5">
             <h1 class="text-light">Registration</h1>
         </div>
-        <div class="col-sm-5 col-sm-offset-1" ng-hide="currentUser">
+        <div class="col-sm-4 col-sm-offset-1">
             <div class="panel panel-default landing-login">
                 <div class="panel-body">
                     <form class="form" name="form" ng-submit="register(form)" novalidate>
