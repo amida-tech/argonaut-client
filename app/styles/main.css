@@ -139,3 +139,7 @@ body {
     background-color: #3F3F3F;
     border-color: #ddd;
 }
+
+.settings-space {
+    padding-bottom: 20px;
+}
