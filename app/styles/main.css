@@ -10,10 +10,15 @@ body {
     background: #fafafa;
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     color: #333;
+    margin: 0;
 }
 
-* {
-    margin: 0;
+.navbar-default {
+    margin-bottom: 0;
+}
+
+.main-body {
+    margin-top: 30px;
 }
 
 .signup-well {
@@ -114,7 +119,7 @@ body {
 }
 .landing-panel {
     background: #fff;
-    padding: 20px;
+    padding: 0px;
     background-image: url("../images/splash.JPG");
     background-repeat: no-repeat;
     background-position: left center;
