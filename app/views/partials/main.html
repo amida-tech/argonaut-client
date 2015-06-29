@@ -1,12 +1,5 @@
-<div class="col-sm-12 landing-panel">
-    <div class="col-sm-offset-1 col-sm-5" ng-hide="currentUser">
-        <div class="panel panel-default">
-            <div class="panel-body">
-                <h1>Welcome to your Medications List</h1>
-            </div>
-        </div>
-    </div>
-    <div class="row" ng-show="currentUser">
+<div class="col-sm-12" ng-show="currentUser">
+    <div class="row">
         <div class="col-sm-offset-1 col-sm-10">
             <div class="panel panel-default">
                 <div class="panel-body">
@@ -15,14 +8,55 @@
             </div>
         </div>
     </div>
-    <div class="col-sm-5 col-sm-offset-1" ng-hide="currentUser">
+    <div class="row">
+        <div class="col-sm-10 col-sm-offset-1" ng-if="!(currentUser.dreToken || currentUser.smartToken)">
+            <div class="panel panel-default landing-login">
+                <div class="panel-body">
+                    <div class="well" ng-show="currentUser">
+                        You don't have any health records connected. Please <a href="/settings">connect one now.</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-10 col-sm-offset-1" ng-if="(currentUser.dreToken || currentUser.smartToken)">
+            <div class="panel panel-default landing-login">
+                <div class="panel-body">
+                    <table class="table table-hover table-bordered table-striped table-condensed">
+                        <thead>
+                        <tr>
+                            <th>
+                                Medication
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="medication in medications">
+                            <td>
+                                {{medication.name}}
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="col-sm-12 landing-panel" ng-hide="currentUser">
+    <div class="col-sm-offset-1 col-sm-5" ng-hide="currentUser">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <h1>Welcome to your Medications List</h1>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-5 col-sm-offset-1">
         <div class="panel panel-default landing-login">
             <div class="panel-body">
                 <form class="form-signin"
                       name="form"
                       ng-submit="login(form)"
                       novalidate>
-
                     <div class="form-group" ng-class="{'has-error': form.email.$error.mongoose}">
                         <label for="email">Email:</label>
                         <input type="text"
@@ -64,39 +98,6 @@
 
                     <button class="btn btn-lg btn-primary btn-block" type="submit"> Sign in</button>
                 </form>
-            </div>
-        </div>
-    </div>
-    <div class="row" ng-show="currentUser">
-        <div class="col-sm-10 col-sm-offset-1" ng-if="!(currentUser.dreToken || currentUser.smartToken)">
-            <div class="panel panel-default landing-login">
-                <div class="panel-body">
-                    <div class="well" ng-show="currentUser">
-                        You don't have any health records connected. Please <a href="/settings">connect one now.</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-sm-10 col-sm-offset-1" ng-if="(currentUser.dreToken || currentUser.smartToken)">
-            <div class="panel panel-default landing-login">
-                <div class="panel-body">
-                    <table class="table table-hover table-bordered table-striped table-condensed">
-                        <thead>
-                        <tr>
-                            <th>
-                                Medication
-                            </th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr ng-repeat="medication in medications">
-                            <td>
-                                {{medication.name}}
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
             </div>
         </div>
     </div>
