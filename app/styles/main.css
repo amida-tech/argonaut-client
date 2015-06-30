@@ -100,20 +100,25 @@ body {
     cursor: pointer;
 }
 
+.client-name {
+    display: table;
+    height: 35px;
+}
+
 .smart-logo {
-    width: 70px;
-    margin-right: 20px;
+    width: 50px;
 }
 
 .dre-logo {
-    width: 50px;
-    margin-right: 20px;
-    margin-left: 8px;
+    width: 35px;
+    margin-left: 6px;
 }
 
 .logo-link {
     color: #FFFFFF;
     font-size: 20px;
+    display: table-cell;
+    vertical-align: middle;
 }
 .text-light {
     color: #FFFFFF;
