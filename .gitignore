@@ -27,3 +27,4 @@ build/Release
 node_modules
 public/bower_components
 app/bower_components
+lib/config/adf
