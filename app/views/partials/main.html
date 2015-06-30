@@ -103,10 +103,14 @@
 <hr/>
 <!--Marketing Content-->
 <div class="col-sm-12 marketing-block">
-    <div class='well' ng-show="currentUser.dreToken">
-        The medications listed here were pulled from your health record stored in the Data Reconciliation Engine.
-    </div>
-    <div class='well' ng-show="currentUser.smartToken">
-        The medications listed here were pulled from your health record stored on SMART on FHIR.
+    <div class="row main-body">
+        <div class="col-sm-offset-1 col-sm-10">
+            <div class='well' ng-show="currentUser.dreToken">
+                The medications listed here were pulled from your health record stored in the Data Reconciliation Engine.
+            </div>
+            <div class='well' ng-show="currentUser.smartToken">
+                The medications listed here were pulled from your health record stored on SMART on FHIR.
+            </div>
+        </div>
     </div>
 </div>
