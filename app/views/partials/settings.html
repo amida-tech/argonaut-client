@@ -16,30 +16,25 @@
                     <div class="row col-sm-12">
                         <div ng-repeat="client in clients">
                             <div class="row col-sm-12">
-                                <div class="col-sm-6">
-                                    <div class="row">
-                                        <div class="col-sm-2 client-name">
-                                            <img ng-class="client.imgclass" ng-src="images/{{client.imgsrc}}"/>
-                                        </div>
-                                        <div class="col-sm-10 client-name">
-                                            <span class="logo-link">{{client.shortname}}</span>
-                                        </div>
+                                <div class="col-sm-8">
+                                    <div class="client-name">
+                                        <img ng-class="client.imgclass" ng-src="images/{{client.imgsrc}}"/><span class="logo-link">{{client.shortname}}</span>
                                     </div>
                                 </div>
-                                <div class="col-sm-6" ng-if="(client.shortname === 'DRE' && currentUser.dreToken) || (client.shortname === 'SMART on FHIR' && currentUser.smartToken)">
-                                    <button class="btn btn-primary col-sm-8 col-sm-offset-2" ng-click="revokeToken()">Disconnect</button>
+                                <div class="col-sm-4" ng-if="(client.shortname === 'DRE' && currentUser.dreToken) || (client.shortname === 'SMART on FHIR' && currentUser.smartToken)">
+                                    <button class="btn btn-primary col-sm-12" ng-click="revokeToken()">Disconnect</button>
                                 </div>
                                 <div>
-                                    <div class="col-sm-6" ng-if="client.shortname ==='DRE'" ng-show="currentUser.smartToken">
+                                    <div class="col-sm-4" ng-if="client.shortname ==='DRE'" ng-show="currentUser.smartToken">
                                         <p class="text-light">Disconnect SMART on FHIR to connect to DRE</p>
                                     </div>
-                                    <div class="col-sm-6" ng-if="client.shortname ==='SMART on FHIR'" ng-show="currentUser.dreToken">
+                                    <div class="col-sm-4" ng-if="client.shortname ==='SMART on FHIR'" ng-show="currentUser.dreToken">
                                         <p class="text-light">Disconnect DRE to connect to SMART on FHIR</p>
                                     </div>
-                                    <div class="col-sm-6" ng-if="!currentUser.smartToken && !currentUser.dreToken">
+                                    <div class="col-sm-4" ng-if="!currentUser.smartToken && !currentUser.dreToken">
                                         <form name="get" action="/fhir" method="post">
                                             <input type='hidden' name='client_id' value='{{client.credentials.client_id}}'>
-                                            <input class='btn btn-primary col-sm-8 col-sm-offset-2' type='submit' value='Connect'>
+                                            <input class='btn btn-primary col-sm-12' type='submit' value='Connect'>
                                         </form>
                                     </div>
                                 </div>
